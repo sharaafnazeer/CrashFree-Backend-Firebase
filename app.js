@@ -7,7 +7,8 @@ const env = require('dotenv').config();
 require('./helpers/passportConfig');
 
 var app = express();
-
+const passport = require('passport');
+app.use(passport.initialize());
 require('./globals');
 
 // view engine setup
@@ -20,8 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const passport = require('passport');
-app.use(passport.initialize());
+
 
 const allowCors = function (req, res, next) {
   console.log("Came to cros");

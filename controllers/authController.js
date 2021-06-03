@@ -241,7 +241,7 @@ const verify = (req, res, next) => {
   if ('authorization' in req.headers) {
     token = req.headers['authorization'].split(' ')[1];
   }
-
+  console.log(token)
   if (!token) {
     jsonResponse(res, 400, badRes('No token provided'));
   } else {

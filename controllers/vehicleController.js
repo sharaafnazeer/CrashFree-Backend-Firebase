@@ -7,19 +7,25 @@ const db = require('../db');
 
 const addVehicle = async (req, res, next) => {
     try {
-        const vehicle = new Vehicle(req.body.vehicleNo, req.body.brand,
-            req.body.model, 1, req.body.type, req.body.status);
-        
-        const object = vehicle.getObject();
+
+        const vehicle = db.collection('vehicles').where("vehicleNo", '==', req.body.vehicleNo);
+        const availableVehicle = await vehicle.get();
+        if (!availableVehicle.empty) {
+            return jsonResponse(res, 200, successRes('You have already added this vehicle successfully'));
+        }
+        const newVehicle = new Vehicle(req.body.vehicleNo, req.body.brand,
+            req.body.model, req.userId, req.body.type, req.body.status);
+
+        const object = newVehicle.getObject();
         await db.collection('vehicles').doc().set(object);
-        return jsonResponse(res, 200, successRes('You have added this vehicle successfully'))
+        return jsonResponse(res, 200, successRes('You have added this vehicle successfully'));
     } catch (error) {
         return jsonResponse(res, 500, errorRes(error))
     }
 }
 
-const getVehicles  = async (req, res, next) => {
-    try{
+const getVehicles = async (req, res, next) => {
+    try {
         const vehicles = await db.collection('vehicles').where("user", '==', req.userId).get();
         const vehicleResponse = [];
         vehicles.forEach((doc) => {
@@ -36,7 +42,7 @@ const getVehicles  = async (req, res, next) => {
         });
 
         return jsonResponse(res, 200, successRes(vehicleResponse))
-    } catch(error) {
+    } catch (error) {
         return jsonResponse(res, 500, errorRes(error))
     }
 }
@@ -46,12 +52,12 @@ const getVehicle = async (req, res, next) => {
         const vehicle = await db.collection('vehicles').doc(req.params.id).get();
         if (!vehicle.exists) {
             return jsonResponse(res, 400, badRes("Vehicle not found"))
-        }        
+        }
         if (vehicle.data().user && vehicle.data().user !== req.userId) {
             return jsonResponse(res, 400, badRes("Vehicle not found"))
         }
         return jsonResponse(res, 200, successRes(vehicle.data()))
-    } catch(error) {
+    } catch (error) {
         return jsonResponse(res, 500, errorRes(error))
     }
 }
@@ -62,7 +68,7 @@ const updateVehicle = async (req, res, next) => {
         const availableVehicle = await vehicle.get();
         if (!availableVehicle.exists) {
             return jsonResponse(res, 400, badRes('You have not added this vehicle'))
-        }          
+        }
         if (availableVehicle.data().user && availableVehicle.data().user !== req.userId) {
             return jsonResponse(res, 400, badRes('You have not added this vehicledd'))
         }
@@ -83,7 +89,7 @@ const deleteVehicle = async (req, res, next) => {
         const availableVehicle = await vehicle.get();
         if (!availableVehicle.exists) {
             return jsonResponse(res, 400, badRes('You have not added this vehicle'))
-        }   
+        }
         if (availableVehicle.data().user && availableVehicle.data().user !== req.userId) {
             return jsonResponse(res, 400, badRes('You have not added this vehicle'))
         }
