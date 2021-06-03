@@ -20,7 +20,7 @@ const addVehicle = async (req, res, next) => {
 
 const getVehicles  = async (req, res, next) => {
     try{
-        const vehicles = await db.collection('vehicles').where("user", '==', 1).get();
+        const vehicles = await db.collection('vehicles').where("user", '==', req.userId).get();
         const vehicleResponse = [];
         vehicles.forEach((doc) => {
             const item = new Vehicle(
@@ -47,7 +47,7 @@ const getVehicle = async (req, res, next) => {
         if (!vehicle.exists) {
             return jsonResponse(res, 400, badRes("Vehicle not found"))
         }        
-        if (vehicle.data().user && vehicle.data().user !== 1) {
+        if (vehicle.data().user && vehicle.data().user !== req.userId) {
             return jsonResponse(res, 400, badRes("Vehicle not found"))
         }
         return jsonResponse(res, 200, successRes(vehicle.data()))
@@ -63,12 +63,12 @@ const updateVehicle = async (req, res, next) => {
         if (!availableVehicle.exists) {
             return jsonResponse(res, 400, badRes('You have not added this vehicle'))
         }          
-        if (availableVehicle.data().user && availableVehicle.data().user !== 1) {
+        if (availableVehicle.data().user && availableVehicle.data().user !== req.userId) {
             return jsonResponse(res, 400, badRes('You have not added this vehicledd'))
         }
 
         const newVehicle = new Vehicle(req.body.vehicleNo, req.body.brand,
-            req.body.model, 1, req.body.type, req.body.status);
+            req.body.model, req.userId, req.body.type, req.body.status);
         const object = newVehicle.getObject();
         await vehicle.update(object);
         return jsonResponse(res, 200, successRes('You have updated this vehicle successfully'))
@@ -84,8 +84,8 @@ const deleteVehicle = async (req, res, next) => {
         if (!availableVehicle.exists) {
             return jsonResponse(res, 400, badRes('You have not added this vehicle'))
         }   
-        if (availableVehicle.data().user && availableVehicle.data().user !== 1) {
-            return jsonResponse(res, 400, badRes('You have not added this vehicle DSAD'))
+        if (availableVehicle.data().user && availableVehicle.data().user !== req.userId) {
+            return jsonResponse(res, 400, badRes('You have not added this vehicle'))
         }
         await vehicle.delete();
         return jsonResponse(res, 200, successRes('You have deleted this vehicle successfully'))

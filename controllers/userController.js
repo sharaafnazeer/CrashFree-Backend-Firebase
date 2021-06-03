@@ -7,7 +7,7 @@ const getAllUsers = async (req, res, next) => {
         let users = await db.collection('users').where("status", '==', 1).get();
         const actualUsers = [];
         users = users.forEach((doc) => {
-            if (doc.id !== 'cmzChcqa85FL6azTibDd') {
+            if (doc.id !== req.userId) {
                 actualUsers.push({
                     ...doc.data(),
                     id: doc.id,
@@ -27,12 +27,12 @@ const getAllUsers = async (req, res, next) => {
                     });
                 })
                 
-                const userCircle = actualCircles.find((doc) =>  doc.user === 'cmzChcqa85FL6azTibDd' || doc.circleUser === 'cmzChcqa85FL6azTibDd');
+                const userCircle = actualCircles.find((doc) =>  doc.user === req.userId || doc.circleUser === req.userId);
                 let requested = false;
                 let requestCame = false;
                 if (userCircle) {
-                    userCircle.user == 'cmzChcqa85FL6azTibDd' ? requested = true : requested = false;
-                    userCircle.circleUser == 'cmzChcqa85FL6azTibDd' ? requestCame = true : requestCame = false;                 
+                    userCircle.user == req.userId ? requested = true : requested = false;
+                    userCircle.circleUser == req.userId ? requestCame = true : requestCame = false;                 
                 
                     realUser.status = userCircle.status;
                     realUser.isCircle = true;

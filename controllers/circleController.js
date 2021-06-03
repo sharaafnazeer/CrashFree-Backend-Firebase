@@ -7,7 +7,7 @@ const User = require('../models/user');
 const addCircle = async (req, res, next) => {
     try {
 
-        const userCicleQry = await db.collection('circles').where("user", '==', 'IokaQvLsAeVAOsBiU1A7').where("circleUser", '==', req.body.circleUser).get();
+        const userCicleQry = await db.collection('circles').where("user", '==', req.userId).where("circleUser", '==', req.body.circleUser).get();
 
         if (!userCicleQry.empty) {
             const userCircleDoc = userCicleQry.docs[0].data();
@@ -17,7 +17,7 @@ const addCircle = async (req, res, next) => {
                     return jsonResponse(res, 400, badRes('You have already requested this contact to add in your close circle. Confirmation pending'))
         }
 
-        const userCircle = new UserCircle('IokaQvLsAeVAOsBiU1A7', req.body.circleUser, circleType()[req.body.type]);
+        const userCircle = new UserCircle(req.userId, req.body.circleUser, circleType()[req.body.type]);
 
         const object = userCircle.getObject();
         await db.collection('circles').doc().set(object);
@@ -36,7 +36,7 @@ const deleteCircle = async (req, res, next) => {
         if (!availableCircle.exists) {
             return jsonResponse(res, 400, badRes('You have not added this contact in your close circle'));
         }   
-        if (availableCircle.data().user !== 'IokaQvLsAeVAOsBiU1A7') {
+        if (availableCircle.data().user !== req.userId) {
             return jsonResponse(res, 400, badRes('You have not added this contact in your close circle')); 
         }
         await circle.delete();
@@ -47,7 +47,7 @@ const deleteCircle = async (req, res, next) => {
 }
 
 const approveCircle = async (req, res, next) => {
-    const userCircle = await db.collection('circles').where("user", '==', req.body.circleUser).where("circleUser", '==', 'cmzChcqa85FL6azTibDd');
+    const userCircle = await db.collection('circles').where("user", '==', req.body.circleUser).where("circleUser", '==', req.userId);
     const availableUserCircle = await userCircle.get();
         if (availableUserCircle.empty) {
             return jsonResponse(res, 400, badRes('You have not added this contact in your close circle'));
@@ -72,7 +72,7 @@ const getApprovedCircle = async (req, res, next) => {
 
         const actualCircles = [];
         userCircles.forEach((doc) => {
-            if (doc.data().user === 'IokaQvLsAeVAOsBiU1A7' || doc.data().circleUser === 'IokaQvLsAeVAOsBiU1A7') {
+            if (doc.data().user === req.userId || doc.data().circleUser === req.userId) {
                 actualCircles.push({
                     ...doc.data(),
                     id: doc.id,
@@ -115,7 +115,7 @@ const getApprovedCircle = async (req, res, next) => {
         const responses = [];
         circleResponse.forEach(userDocs => {
             userDocs.forEach(user => {
-                if (user.circleUserId != 'IokaQvLsAeVAOsBiU1A7') {
+                if (user.circleUserId != req.userId) {
                         responses.push(user);
                 }                   
             })
@@ -133,7 +133,7 @@ const getPendingCircle = async (req, res, next) => {
 
         const actualCircles = [];
         userCircles.forEach((doc) => {
-            if (doc.data().user === 'IokaQvLsAeVAOsBiU1A7' || doc.data().circleUser === 'IokaQvLsAeVAOsBiU1A7') {
+            if (doc.data().user === req.userId || doc.data().circleUser === req.userId) {
                 actualCircles.push({
                     ...doc.data(),
                     id: doc.id,
@@ -144,8 +144,8 @@ const getPendingCircle = async (req, res, next) => {
         const circleResponse = await Promise.all(actualCircles.map(async (userCircleDoc) => {
             let requested = false;
             let requestCame = false;
-            userCircleDoc.user == 'cmzChcqa85FL6azTibDd' ? requested = true : requested = false;
-            userCircleDoc.circleUser == 'cmzChcqa85FL6azTibDd' ? requestCame = true : requestCame = false;
+            userCircleDoc.user == req.userId ? requested = true : requested = false;
+            userCircleDoc.circleUser == req.userId ? requestCame = true : requestCame = false;
 
             if(requestCame) {
 
@@ -185,7 +185,7 @@ const getPendingCircle = async (req, res, next) => {
         const responses = [];
         circleResponse.forEach(userDocs => {
             userDocs.forEach(user => {
-                if (user.circleUserId != 'cmzChcqa85FL6azTibDd') {
+                if (user.circleUserId != req.userId) {
                     responses.push(user);
                 }                   
             })
@@ -203,7 +203,7 @@ const getRequestedCircle = async (req, res, next) => {
 
         const actualCircles = [];
         userCircles.forEach((doc) => {
-            if (doc.data().user === 'IokaQvLsAeVAOsBiU1A7' || doc.data().circleUser === 'IokaQvLsAeVAOsBiU1A7') {
+            if (doc.data().user === req.userId || doc.data().circleUser === req.userId) {
                 actualCircles.push({
                     ...doc.data(),
                     id: doc.id,
@@ -214,8 +214,8 @@ const getRequestedCircle = async (req, res, next) => {
         const circleResponse = await Promise.all(actualCircles.map(async (userCircleDoc) => {
             let requested = false;
             let requestCame = false;
-            userCircleDoc.user == 'IokaQvLsAeVAOsBiU1A7' ? requested = true : requested = false;
-            userCircleDoc.circleUser == 'IokaQvLsAeVAOsBiU1A7' ? requestCame = true : requestCame = false;
+            userCircleDoc.user == req.userId ? requested = true : requested = false;
+            userCircleDoc.circleUser == req.userId ? requestCame = true : requestCame = false;
 
             if(requested) {
 
@@ -255,7 +255,7 @@ const getRequestedCircle = async (req, res, next) => {
         const responses = [];
         circleResponse.forEach(userDocs => {
             userDocs.forEach(user => {
-                if (user.circleUserId != 'IokaQvLsAeVAOsBiU1A7') {
+                if (user.circleUserId != req.userId) {
                     responses.push(user);
                 }                   
             })
@@ -273,7 +273,7 @@ const getAllCircle = async (req, res, next) => {
 
         const actualCircles = [];
         userCircles.forEach((doc) => {
-            if (doc.data().user === 'IokaQvLsAeVAOsBiU1A7' || doc.data().circleUser === 'IokaQvLsAeVAOsBiU1A7') {
+            if (doc.data().user === req.userId || doc.data().circleUser === req.userId) {
                 actualCircles.push({
                     ...doc.data(),
                     id: doc.id,

@@ -6,7 +6,7 @@ const User = require('../models/user');
 
 const startStopDriving = async (req, res, next) => {
     try {
-        const user = await db.collection('users').doc('IokaQvLsAeVAOsBiU1A7');
+        const user = await db.collection('users').doc(req.userId);
 
         const availableUser = await user.get();
         if (!availableUser.exists) {
@@ -24,7 +24,7 @@ const startStopDriving = async (req, res, next) => {
         await user.update(updateData);
 
 
-        const vehicles = await db.collection('vehicles').where("user", '==', 'IokaQvLsAeVAOsBiU1A7').get();
+        const vehicles = await db.collection('vehicles').where("user", '==', req.userId).get();
         const otherVehicles = [];
 
         vehicles.forEach((doc) => {
@@ -76,7 +76,7 @@ const startStopDriving = async (req, res, next) => {
 
 const updateDriverLocation = async (req, res, next) => {
 
-    const user = await db.collection('users').doc('IokaQvLsAeVAOsBiU1A7');
+    const user = await db.collection('users').doc(req.userId);
 
         const availableUser = await user.get();
         if (!availableUser.exists) {
