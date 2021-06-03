@@ -4,6 +4,7 @@ const passport = require("passport");
 const vehicleController = require('../controllers/vehicleController');
 const userController = require('../controllers/userController');
 const circleController = require('../controllers/circleController');
+const drivingController = require('../controllers/drivingController');
 
 router.get('/user', userController.getAllUsers);
 
@@ -22,10 +23,13 @@ router.get('/circle/get-approved', circleController.getApprovedCircle);
 router.get('/circle/get-pending', circleController.getPendingCircle);
 router.get('/circle/get-requested', circleController.getRequestedCircle);
 
-// router.get('/circle/get-approved', passport.authenticate('jwt', { session: false }), authController.verify, circleController.getApprovedCircle)
-// router.get('/circle/get-pending', passport.authenticate('jwt', { session: false }), authController.verify, circleController.getPendingCircle)
-// router.get('/circle/get-requested', passport.authenticate('jwt', { session: false }), authController.verify, circleController.getRequestedCircle)
 
+router.post('/driving', drivingController.startStopDriving);
+
+
+// router.post('/driving', passport.authenticate('jwt', { session: false }), authController.verify, drivingController.startStopDriving)
+// router.post('/driving/location', passport.authenticate('jwt', { session: false }), authController.verify, drivingController.updateDriverLocation)
+// router.get('/driving/alert', passport.authenticate('jwt', { session: false }), authController.verify, drivingController.sendAlertToUser)
 
 
 module.exports = router;
