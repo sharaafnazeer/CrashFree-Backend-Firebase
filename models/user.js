@@ -12,4 +12,15 @@ class User {
       this.driving = driving;
       this.firebaseToken = firebaseToken;
   }
+  setId(id) {
+    this.id = id;
+  }
+  getId() {
+      return this.id;
+  }
+  getObject() {
+      return Object.assign({}, this);
+  }
 }
+
+module.exports = User;
