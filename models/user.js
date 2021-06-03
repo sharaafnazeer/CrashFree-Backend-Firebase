@@ -1,6 +1,8 @@
+const bcrypt = require('bcrypt');
+
 class User {
   constructor (firstName, lastName, email, password, phone, address, 
-    status, lastLocation, driving, firebaseToken) {
+    status, lastLocation = {}, driving = false, firebaseToken = '') {
       this.firstName = firstName;
       this.lastName = lastName;
       this.email = email;
@@ -17,6 +19,24 @@ class User {
   }
   getId() {
       return this.id;
+  }
+  setEmail(email) {
+    this.email =email;
+  }
+  getEmail () {
+    return this.email;
+  }
+  setPassword(password) {
+    this.password = password
+  }
+  getPassword() {
+    return this.password;
+  }
+  setStatus(status) {
+    this.status = status
+  }
+  getStatus() {
+    return this.status;
   }
   getObject() {
       return Object.assign({}, this);

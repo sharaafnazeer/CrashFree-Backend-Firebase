@@ -11,6 +11,9 @@ class UserToken {
     getId() {
         return this.id;
     }
+    getToken() {
+        return this.token;
+    }
     getObject() {
         return Object.assign({}, this);
     }
