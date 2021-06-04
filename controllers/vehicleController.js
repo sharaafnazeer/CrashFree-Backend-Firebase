@@ -25,6 +25,7 @@ const addVehicle = async (req, res, next) => {
 }
 
 const getVehicles = async (req, res, next) => {
+    console.log(req.userId)
     try {
         const vehicles = await db.collection('vehicles').where("user", '==', req.userId).get();
         const vehicleResponse = [];

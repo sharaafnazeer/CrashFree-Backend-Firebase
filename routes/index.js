@@ -6,6 +6,7 @@ const vehicleController = require('../controllers/vehicleController');
 const userController = require('../controllers/userController');
 const circleController = require('../controllers/circleController');
 const drivingController = require('../controllers/drivingController');
+const arduinoController = require('../controllers/arduinoController');
 
 router.post('/login', authController.signIn); // login
 router.get('/verify', authController.verify); // check user logged in
@@ -39,6 +40,10 @@ router.get('/vehicle/alert', passport.authenticate('jwt', { session: false }), a
 router.post('/driving', passport.authenticate('jwt', { session: false }), authController.verify, drivingController.startStopDriving)
 router.post('/driving/location', passport.authenticate('jwt', { session: false }), authController.verify, drivingController.updateDriverLocation)
 router.get('/driving/alert', passport.authenticate('jwt', { session: false }), authController.verify, drivingController.sendAlertToUser)
+
+
+router.post('/track', arduinoController.addValues)
+router.post('/driver-update', arduinoController.updateDriverOkay)
 
 
 module.exports = router;

@@ -61,7 +61,7 @@ const signIn = (req, res, next) => {
             const body = { id: user.id, email: user.email };
             const token = jwt.sign({ user: body }, process.env.JWT_SECRET);
 
-            return jsonResponse(res, 200, successRes({ 'verified': true, token }))
+            return jsonResponse(res, 200, successRes({ 'verified': true, token, 'id' : user.id }))
           }
         );
       } catch (error) {
