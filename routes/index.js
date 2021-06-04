@@ -39,11 +39,11 @@ router.get('/vehicle/alert', passport.authenticate('jwt', { session: false }), a
 
 router.post('/driving', passport.authenticate('jwt', { session: false }), authController.verify, drivingController.startStopDriving)
 router.post('/driving/location', passport.authenticate('jwt', { session: false }), authController.verify, drivingController.updateDriverLocation)
-router.get('/driving/alert', passport.authenticate('jwt', { session: false }), authController.verify, drivingController.sendAlertToUser)
-
+router.post('/driving/update', passport.authenticate('jwt', { session: false }), authController.verify, drivingController.updateDriverOkay)
+router.post('/driving/alert', drivingController.alertDrowsiness)
 
 router.post('/track', arduinoController.addValues)
-router.post('/driver-update', arduinoController.updateDriverOkay)
+
 
 
 module.exports = router;

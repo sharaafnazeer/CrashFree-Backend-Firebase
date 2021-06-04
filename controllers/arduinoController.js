@@ -35,49 +35,6 @@ const addValues = async (req, res, next) => {
     }
 }
 
-const updateDriverOkay = async (req, res, next) => {
-    req.userId = '1GGW02DCJJsPH3RRgjKF'
-    try {
-        const userTracking = await db.collection('usertracking').doc(req.userId).get();
-
-        let accidentOccured = false;
-        let suspecious = false;
-        if (req.body.status === 1) {
-            accidentOccured = false;
-            suspecious = false;
-        } else {
-            accidentOccured = true;
-            suspecious = true;
-        }
-        
-        const updateData = {
-            ...userTracking.data(),
-            accidentOccured : accidentOccured,
-            suspecious : suspecious,
-        }
-        
-        if (!userTracking.exists) {
-            await db.collection('usertracking').doc(req.userId).set(updateData);
-        }else {
-            await db.collection('usertracking').doc(req.userId).update(updateData);
-        }
-
-        if (req.body.vibrationValue > 0) {
-            if (req.body.accelerometerValue > accidentSettings.accelerometerThreshold) {
-                newUserTracking.setSuspecious(true);
-                object = newUserTracking.getObject();
-                await db.collection('usertracking').doc(req.body.userId).update(object);
-            }
-        }
-
-        return jsonResponse(res, 200, successRes(''));
-    } catch (error) {
-        console.log(error)
-        return jsonResponse(res, 500, errorRes(error))
-    }
-}
-
 module.exports = {
     addValues,
-    updateDriverOkay
 }

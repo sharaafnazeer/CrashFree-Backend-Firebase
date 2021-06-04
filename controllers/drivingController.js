@@ -93,7 +93,69 @@ const updateDriverLocation = async (req, res, next) => {
         await user.update(updateData);
         return jsonResponse(res, 200, successRes(''));
 }
+const updateDriverOkay = async (req, res, next) => {
+    
+    try {
+        const userTracking = await db.collection('usertracking').doc(req.userId).get();
 
+        let accidentOccured = false;
+        let suspecious = false;
+        if (req.body.status === 1) {
+            accidentOccured = false;
+            suspecious = false;
+        } else {
+            accidentOccured = true;
+            suspecious = true;
+        }
+        
+        const updateData = {
+            ...userTracking.data(),
+            accidentOccured : accidentOccured,
+            suspecious : suspecious,
+        }
+        
+        if (!userTracking.exists) {
+            await db.collection('usertracking').doc(req.userId).set(updateData);
+        }else {
+            await db.collection('usertracking').doc(req.userId).update(updateData);
+        }
+
+        if (req.body.vibrationValue > 0) {
+            if (req.body.accelerometerValue > accidentSettings.accelerometerThreshold) {
+                newUserTracking.setSuspecious(true);
+                object = newUserTracking.getObject();
+                await db.collection('usertracking').doc(req.body.userId).update(object);
+            }
+        }
+
+        return jsonResponse(res, 200, successRes(''));
+    } catch (error) {
+        console.log(error)
+        return jsonResponse(res, 500, errorRes(error))
+    }
+}
+
+const alertDrowsiness = async (req, res, next) => {
+
+    try {
+        const userTracking = await db.collection('usertracking').doc(req.body.userId).get();        
+        const updateData = {
+            ...userTracking.data(),
+            isDrowsy: req.body.status
+        }
+        
+        if (!userTracking.exists) {
+            await db.collection('usertracking').doc(req.body.userId).set(updateData);
+        }else {
+            await db.collection('usertracking').doc(req.body.userId).update(updateData);
+        }
+
+        return jsonResponse(res, 200, successRes(''));
+    } catch (error) {
+        console.log(error)
+        return jsonResponse(res, 500, errorRes(error))
+    }
+}
 
 const sendAlertToUser = (req, res, next) => {
     const registrationToken = 'asdfasdfas' // Should get from db. Unique for every mobile        
@@ -109,5 +171,7 @@ const sendAlertToUser = (req, res, next) => {
 module.exports = {
     startStopDriving,
     updateDriverLocation,
+    updateDriverOkay,
+    alertDrowsiness,
     sendAlertToUser,
 }
