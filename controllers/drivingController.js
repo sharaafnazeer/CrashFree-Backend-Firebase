@@ -141,7 +141,7 @@ const alertDrowsiness = async (req, res, next) => {
         const userTracking = await db.collection('usertracking').doc(req.body.userId).get();        
         const updateData = {
             ...userTracking.data(),
-            isDrowsy: req.body.status
+            isDrowsy: req.body.status == 1 ? true: false
         }
         
         if (!userTracking.exists) {
