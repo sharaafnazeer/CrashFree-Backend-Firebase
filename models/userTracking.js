@@ -3,13 +3,16 @@
 const moment = require("moment");
 
 class UserTracking {
-    constructor(userId, vehicleId, lastLocation, vibrationValue, accelerometerValue, time = moment(), 
+    constructor(userId, vehicleId, lastLocation, vibrationValue, rollValueInitial, pitchValueInitial, rollValue, pitchValue, time = moment(), 
                 suspecious = false, accidentOccured = false, isDrowsy = false) {
         this.userId = userId;
         this.vehicleId = vehicleId;
         this.lastLocation = lastLocation;
         this.vibrationValue = vibrationValue;
-        this.accelerometerValue = accelerometerValue;
+        this.rollValueInitial = rollValueInitial;
+        this.pitchValueInitial = pitchValueInitial;
+        this.rollValue = rollValue;
+        this.pitchValue = pitchValue;
         this.time = time;
         this.accidentOccured = accidentOccured;
         this.suspecious = suspecious;

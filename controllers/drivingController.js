@@ -70,6 +70,7 @@ const startStopDriving = async (req, res, next) => {
             return jsonResponse(res, 200, successRes('You have stoped driving successfully'))
         }
     } catch(error) {
+        console.log(error)
         return jsonResponse(res, 500, errorRes(error))
     }
 }
