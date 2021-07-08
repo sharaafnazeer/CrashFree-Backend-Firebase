@@ -259,12 +259,13 @@ const verify = (req, res, next) => {
 const updateFcm = async (req, res, next) => {
   try {
       const user = await db.collection('users').doc(req.userId);
-
+      console.log(req.body);
       const availableUser = await user.get();
-      console.log(availableUser);
+      
       if (!availableUser.exists) {
           return jsonResponse(res, 400, badRes("Account not available"))
       }
+      console.log(availableUser.email);
       const updateData = {
           ...availableUser.data(),
           firebaseToken : req.body.token
