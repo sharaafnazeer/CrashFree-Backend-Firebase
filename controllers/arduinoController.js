@@ -10,7 +10,7 @@ const addValues = async (req, res, next) => {
         //const actualVehicles = vehicles.data();
 
         if (vehicles.empty) {
-            return jsonResponse(res, 400, errorRes('No vehcile is on driving state now'));
+            return jsonResponse(res, 400, badRes('No vehcile is on driving state now'));
         }
 
         let accidentSettings = await db.collection('settings').doc('accident').get();

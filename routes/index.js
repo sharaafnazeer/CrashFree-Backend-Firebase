@@ -16,6 +16,7 @@ router.post('/verify-reset', authController.resetUserVerify); // reset account v
 router.post('/verify-reset-code', authController.verifyResetCode); // reset account verify
 router.post('/reset-password', authController.resetPassword); // reset account password
 router.get('/check', passport.authenticate('jwt', { session: false }), authController.checkAuth); 
+router.post('/fcm', passport.authenticate('jwt', { session: false }), authController.verify, authController.updateFcm); 
 
 router.get('/user', passport.authenticate('jwt', { session: false }), authController.verify, userController.getAllUsers)
 

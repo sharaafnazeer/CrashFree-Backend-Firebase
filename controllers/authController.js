@@ -254,7 +254,27 @@ const verify = (req, res, next) => {
       }
     })
   }
+}
 
+const updateFcm = async (req, res, next) => {
+  try {
+      const user = await db.collection('users').doc(req.userId);
+
+      const availableUser = await user.get();
+      console.log(availableUser);
+      if (!availableUser.exists) {
+          return jsonResponse(res, 400, badRes("Account not available"))
+      }
+      const updateData = {
+          ...availableUser.data(),
+          firebaseToken : req.body.token
+      }
+      await user.update(updateData);
+      return jsonResponse(res, 200, successRes(''))
+  } catch(error) {
+      console.log(error)
+      return jsonResponse(res, 500, errorRes(error))
+  }
 }
 
 module.exports = {
@@ -266,4 +286,5 @@ module.exports = {
   verifyResetCode,
   resetUserVerify,
   activateAccount,
+  updateFcm,
 }
