@@ -43,7 +43,7 @@ router.post('/driving/location', passport.authenticate('jwt', { session: false }
 router.post('/driving/update', passport.authenticate('jwt', { session: false }), authController.verify, drivingController.updateDriverOkay)
 router.post('/driving/alert', drivingController.alertDrowsiness)
 
-router.post('/track', arduinoController.addValues)
+router.get('/track', arduinoController.addValues)
 
 
 

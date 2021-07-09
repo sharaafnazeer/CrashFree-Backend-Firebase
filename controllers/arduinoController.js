@@ -6,7 +6,7 @@ const addValues = async (req, res, next) => {
     
     try {
 
-        const vehicles = await db.collection('vehicles').where("user", '==', req.body.userId).where("status", '==', 1).get();
+        const vehicles = await db.collection('vehicles').where("user", '==', req.query.userId).where("status", '==', 1).get();
         //const actualVehicles = vehicles.data();
 
         if (vehicles.empty) {
@@ -15,22 +15,22 @@ const addValues = async (req, res, next) => {
 
         let accidentSettings = await db.collection('settings').doc('accident').get();
         accidentSettings = accidentSettings.data();
-        let userTracking = await db.collection('usertracking').doc(req.body.userId).get();
+        let userTracking = await db.collection('usertracking').doc(req.query.userId).get();
         
-        let newUserTracking = new UserTracking(req.body.userId, req.body.vehicleId,
-            req.body.lastLocation, req.body.vibrationValue, req.body.rollValueInitial, req.body.pitchValueInitial, req.body.rollValue, req.body.pitchValue);
+        let newUserTracking = new UserTracking(req.query.userId, req.query.vehicleId,
+            {}, req.query.vibrationValue, req.query.rollValueInitial, req.query.pitchValueInitial, req.query.rollValue, req.query.pitchValue);
 
         let object = newUserTracking.getObject();
         
         if (!userTracking.exists) {
-            await db.collection('usertracking').doc(req.body.userId).set(object);
+            await db.collection('usertracking').doc(req.query.userId).set(object);
         }else {
-            await db.collection('usertracking').doc(req.body.userId).update(object);
+            await db.collection('usertracking').doc(req.query.userId).update(object);
         }
 
-        if (req.body.vibrationValue > 0) {
+        if (req.query.vibrationValue > 0) {
 
-            userTracking = await db.collection('usertracking').doc(req.body.userId).get();
+            userTracking = await db.collection('usertracking').doc(req.query.userId).get();
 
             const actualTracking = userTracking.data();
             let rollTrue = false;
@@ -104,7 +104,7 @@ const addValues = async (req, res, next) => {
             if (rollTrue || pitchTrue) {
                 newUserTracking.setSuspecious(true);
                 object = newUserTracking.getObject();
-                await db.collection('usertracking').doc(req.body.userId).update(object);
+                await db.collection('usertracking').doc(req.query.userId).update(object);
             }
         }
 
