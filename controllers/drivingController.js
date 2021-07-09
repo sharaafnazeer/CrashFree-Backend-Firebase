@@ -1,8 +1,7 @@
 'use strict';
 const db = require('../db');
 
-const Vehicle = require('../models/vehicle');
-const User = require('../models/user');
+const UserTracking = require('../models/userTracking');
 var admin = require("firebase-admin");
 
 const startStopDriving = async (req, res, next) => {
