@@ -191,8 +191,8 @@ const updateDriverOkay = async (req, res, next) => {
         
                 const finalResponses = await Promise.all(responses.map(async (res) => {
         
-                    try {            
-                        const vehicle = db.collection('vehicles').where("user", '==', res.id).where("status", '==', 1);
+                    try {       
+                        const vehicle = db.collection('vehicles').where("user", '==', req.userId).where("status", '==', 1);
                         const availableVehicle = await vehicle.get();                        
                         if (!availableVehicle.empty) {
                             const actualVehicle = availableVehicle.docs[0].data();
@@ -213,6 +213,7 @@ const updateDriverOkay = async (req, res, next) => {
                 }));
         
                 finalResponses.forEach(async (element) => {
+                    console.log(element)
                     const fireResponse = await admin.messaging().sendToDevice(
                         [element.firebaseToken], // ['token_1', 'token_2', ...]
                         {
