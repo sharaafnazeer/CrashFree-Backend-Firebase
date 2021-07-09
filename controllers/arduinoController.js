@@ -37,7 +37,6 @@ const addValues = async (req, res, next) => {
             let pitchTrue = false;
 
             if (actualTracking.rollValueInitial < 0) {
-
                 if(actualTracking.rollValue < 0) {
 
                     console.log("roll came 1");
@@ -45,60 +44,91 @@ const addValues = async (req, res, next) => {
                     console.log (actualTracking.rollValueInitial)
                     console.log (accidentSettings.accelerometerThreshold)
                     console.log (actualTracking.rollValueInitial - accidentSettings.accelerometerThreshold)
-                    
-
                     if(actualTracking.rollValue < (actualTracking.rollValueInitial - accidentSettings.accelerometerThreshold)) {
                         rollTrue = true;
                     }
 
                 } else {
-
-
                     console.log("roll came 2");
                     console.log (actualTracking.rollValue)
                     console.log (actualTracking.rollValueInitial)
                     console.log (accidentSettings.accelerometerThreshold)
                     console.log (actualTracking.rollValueInitial + accidentSettings.accelerometerThreshold)
-
                     if(actualTracking.rollValue > (actualTracking.rollValueInitial + accidentSettings.accelerometerThreshold)) {
                         rollTrue = true;
                     }
-
                 }
                 console.log(rollTrue)
+            } else {
+                if(actualTracking.rollValue < 0) {
+
+                    console.log("roll came 11");
+                    console.log (actualTracking.rollValue)
+                    console.log (actualTracking.rollValueInitial)
+                    console.log (accidentSettings.accelerometerThreshold)
+                    console.log (actualTracking.rollValueInitial - accidentSettings.accelerometerThreshold)
+                    if(actualTracking.rollValue < (actualTracking.rollValueInitial - accidentSettings.accelerometerThreshold)) {
+                        rollTrue = true;
+                    }
+                } else {
+                    console.log("roll came 22");
+                    console.log (actualTracking.rollValue)
+                    console.log (actualTracking.rollValueInitial)
+                    console.log (accidentSettings.accelerometerThreshold)
+                    console.log ((actualTracking.rollValueInitial + accidentSettings.accelerometerThreshold))
+                    if(actualTracking.rollValue > (actualTracking.rollValueInitial + accidentSettings.accelerometerThreshold)) {
+                        rollTrue = true;
+                    }
+                }
             }
 
 
             if (actualTracking.pitchValueInitial < 0) {
 
                 if(actualTracking.pitchValue < 0) {
-
                     console.log("pitch came 1");
                     console.log (actualTracking.pitchValue)
                     console.log (actualTracking.pitchValueInitial)
                     console.log (accidentSettings.accelerometerThreshold)
                     console.log (actualTracking.pitchValueInitial - accidentSettings.accelerometerThreshold)
-                    
-
                     if(actualTracking.pitchValue < (actualTracking.pitchValueInitial - accidentSettings.accelerometerThreshold)) {
                         pitchTrue = true;
                     }
 
                 } else {
-
-
                     console.log("pitch came 2");
                     console.log (actualTracking.pitchValue)
                     console.log (actualTracking.pitchValueInitial)
                     console.log (accidentSettings.accelerometerThreshold)
                     console.log (actualTracking.pitchValueInitial + accidentSettings.accelerometerThreshold)
-
                     if(actualTracking.pitchValue > (actualTracking.pitchValueInitial + accidentSettings.accelerometerThreshold)) {
                         pitchTrue = true;
                     }
 
                 }
                 console.log(pitchTrue)
+            } else {
+                if(actualTracking.pitchValue < 0) {
+                    console.log("pitch came 1");
+                    console.log (actualTracking.pitchValue)
+                    console.log (actualTracking.pitchValueInitial)
+                    console.log (accidentSettings.accelerometerThreshold)
+                    console.log (actualTracking.pitchValueInitial - accidentSettings.accelerometerThreshold)
+                    if(actualTracking.pitchValue < (actualTracking.pitchValueInitial - accidentSettings.accelerometerThreshold)) {
+                        pitchTrue = true;
+                    }
+
+                } else {
+                    console.log("pitch came 2");
+                    console.log (actualTracking.pitchValue)
+                    console.log (actualTracking.pitchValueInitial)
+                    console.log (accidentSettings.accelerometerThreshold)
+                    console.log (actualTracking.pitchValueInitial + accidentSettings.accelerometerThreshold)
+                    if(actualTracking.pitchValue > (actualTracking.pitchValueInitial + accidentSettings.accelerometerThreshold)) {
+                        pitchTrue = true;
+                    }
+
+                }
             }
 
             if (rollTrue || pitchTrue) {
