@@ -35,7 +35,7 @@ router.delete('/vehicle/:id', passport.authenticate('jwt', { session: false }), 
 router.get('/vehicle', passport.authenticate('jwt', { session: false }), authController.verify, vehicleController.getVehicles)
 router.get('/vehicle/:id', passport.authenticate('jwt', { session: false }), authController.verify, vehicleController.getVehicle)
 
-router.get('/vehicle/alert', passport.authenticate('jwt', { session: false }), authController.verify, drivingController.sendAlertToUser)
+router.post('/vehicle/alert', passport.authenticate('jwt', { session: false }), authController.verify, drivingController.sendAlertToUser)
 
 
 router.post('/driving', passport.authenticate('jwt', { session: false }), authController.verify, drivingController.startStopDriving)
