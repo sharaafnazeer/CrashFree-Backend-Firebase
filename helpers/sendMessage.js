@@ -1,10 +1,5 @@
 var admin = require("firebase-admin");
 
-// var serviceAccount = require("../crashfree-sdk.json");
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount)
-// });
-
 class Message {
     static async send(registrationTokens, payload) {
 
